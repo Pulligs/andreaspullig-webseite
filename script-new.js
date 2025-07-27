@@ -975,4 +975,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+});// ... [Ihr bestehender Code] ...
+
+// URL-Hash-Navigation für direkte Links
+document.addEventListener('DOMContentLoaded', function() {
+    // Prüfen ob URL einen Pfad hat (wie /blog, /mentoring etc.)
+    const path = window.location.pathname;
+    if (path !== '/') {
+        const sectionId = path.substring(1); // Entfernt das /
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            setTimeout(() => {
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+    }
 });
