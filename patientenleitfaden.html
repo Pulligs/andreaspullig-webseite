@@ -233,109 +233,128 @@
 
     <!-- CSS für die Patientenleitfaden-Seite -->
     <style>
+        /* Einheitliches Design-System */
         .container {
             max-width: 780px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 30px 20px;
             background: white;
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             border-radius: 8px;
             margin-top: 20px;
             margin-bottom: 20px;
+            font-family: 'Titillium Web', sans-serif;
         }
         
+        /* Header */
         .header {
             text-align: center;
-            padding: 60px 0 40px 0;
+            padding: 40px 0 30px 0;
             border-bottom: 1px solid #f0f0f1;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
         .header h1 {
-            font-size: 2.4em;
-            margin-bottom: 12px;
+            font-size: 2.2em;
+            margin-bottom: 10px;
             font-weight: 600;
             color: #9fa979;
             letter-spacing: -0.5px;
-            font-family: 'Titillium Web', sans-serif;
         }
         
         .header .subtitle {
             font-size: 1.1em;
             color: #666;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 400;
-            font-family: 'Titillium Web', sans-serif;
         }
         
         .header .doctor {
             font-size: 1em;
             color: #9aafbf;
             font-weight: 500;
-            font-family: 'Titillium Web', sans-serif;
         }
         
+        /* Welcome Box */
         .welcome {
             background: #f8f9fa;
-            padding: 30px;
+            padding: 25px;
             border-radius: 6px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             border-left: 3px solid #b5c2a5;
         }
         
         .welcome h2 {
             color: #333;
-            margin-bottom: 15px;
-            font-size: 1.5em;
+            margin: 0 0 12px 0;
+            font-size: 1.4em;
             font-weight: 600;
-            font-family: 'Titillium Web', sans-serif;
         }
         
         .welcome p {
             color: #555;
-            font-size: 1.05em;
-            font-family: 'Titillium Web', sans-serif;
+            margin: 0;
+            font-size: 1em;
+            line-height: 1.5;
         }
         
+        /* Standard Sections */
         .section {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
         .section h2 {
             color: #333;
-            margin-bottom: 20px;
-            font-size: 1.7em;
+            margin: 0 0 15px 0;
+            font-size: 1.5em;
             font-weight: 600;
             border-bottom: 1px solid #f0f0f1;
-            padding-bottom: 10px;
-            font-family: 'Titillium Web', sans-serif;
+            padding-bottom: 8px;
         }
         
         .section h3 {
             color: #555;
-            margin: 20px 0 10px 0;
-            font-size: 1.3em;
+            margin: 15px 0 8px 0;
+            font-size: 1.2em;
             font-weight: 600;
-            font-family: 'Titillium Web', sans-serif;
         }
         
-        .section p, .section li {
+        .section p {
             color: #666;
-            margin-bottom: 0px;
-            font-size: 1.02em;
-            font-family: 'Titillium Web', sans-serif;
+            margin: 0 0 8px 0;
+            font-size: 1em;
+            line-height: 1.5;
         }
         
+        /* Listen */
+        ul {
+            padding-left: 18px;
+            margin: 8px 0;
+        }
+        
+        li {
+            margin-bottom: 3px;
+            color: #666;
+            line-height: 1.4;
+            font-size: 1em;
+        }
+        
+        li strong {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        /* Feature Grid */
         .feature-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
         }
         
         .feature-card {
             background: #fafbfc;
-            padding: 25px;
+            padding: 20px;
             border-radius: 6px;
             border: 1px solid #f0f0f1;
             transition: all 0.3s ease;
@@ -348,48 +367,49 @@
         
         .feature-card h4 {
             color: #333;
-            margin-bottom: 12px;
+            margin: 0 0 10px 0;
             font-size: 1.1em;
             font-weight: 600;
-            font-family: 'Titillium Web', sans-serif;
         }
         
         .feature-card p {
             color: #666;
+            margin: 0;
             font-size: 0.95em;
-            line-height: 1.6;
-            font-family: 'Titillium Web', sans-serif;
+            line-height: 1.4;
         }
         
+        /* Process Section */
         .process-section {
             background: #fafbfc;
-            padding: 30px;
+            padding: 20px;
             border-radius: 6px;
-            margin: 25px 0;
+            margin: 15px 0;
             border: 1px solid #f0f0f1;
         }
         
         .process-step {
-            margin: 20px 0;
-            padding: 20px 0;
+            margin: 15px 0;
+            padding: 15px 0;
             border-bottom: 1px solid #f0f0f1;
         }
         
         .process-step:last-child {
             border-bottom: none;
+            margin-bottom: 0;
         }
         
         .process-step h3 {
             color: #9fa979;
-            margin-bottom: 12px;
-            font-size: 1.2em;
+            margin: 0 0 8px 0;
+            font-size: 1.1em;
             font-weight: 600;
-            font-family: 'Titillium Web', sans-serif;
         }
         
+        /* Highlight Box */
         .highlight-box {
             background: linear-gradient(135deg, #f8f9fa 0%, #f0f0f1 100%);
-            padding: 30px;
+            padding: 25px;
             border-radius: 6px;
             margin: 25px 0;
             border-left: 3px solid #9aafbf;
@@ -397,29 +417,35 @@
         
         .highlight-box h2 {
             color: #333;
-            margin-bottom: 20px;
+            margin: 0 0 15px 0;
+            font-size: 1.4em;
+            font-weight: 600;
             border: none;
             padding: 0;
-            font-family: 'Titillium Web', sans-serif;
         }
         
         .highlight-box h3 {
             color: #9aafbf;
-            margin-top: 20px;
-            margin-bottom: 8px;
-            font-family: 'Titillium Web', sans-serif;
+            margin: 12px 0 6px 0;
+            font-size: 1.1em;
+            font-weight: 600;
         }
         
+        .highlight-box p {
+            margin: 0 0 8px 0;
+        }
+        
+        /* Info Grid */
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
         }
         
         .info-item {
             background: #fafbfc;
-            padding: 18px;
+            padding: 15px;
             border-radius: 6px;
             border: 1px solid #f0f0f1;
         }
@@ -427,54 +453,60 @@
         .info-item strong {
             color: #333;
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             font-weight: 600;
-            font-family: 'Titillium Web', sans-serif;
+            font-size: 1em;
         }
         
         .info-item p {
             color: #666;
-            font-size: 0.95em;
+            font-size: 0.9em;
             margin: 0;
-            font-family: 'Titillium Web', sans-serif;
         }
         
+        /* Emergency Box */
         .emergency {
             background: #fff8f0;
             border: 1px solid #deb893;
             border-radius: 6px;
-            padding: 25px;
+            padding: 20px;
             margin: 25px 0;
         }
         
         .emergency h3 {
             color: #9fa979;
-            margin-bottom: 12px;
+            margin: 0 0 10px 0;
             font-weight: 600;
-            font-family: 'Titillium Web', sans-serif;
+            font-size: 1.2em;
         }
         
+        .emergency p {
+            margin: 0 0 8px 0;
+        }
+        
+        /* Contact Box */
         .contact-box {
             background: #f8f9fa;
             border: 2px solid #b5c2a5;
-            padding: 30px;
+            padding: 25px;
             border-radius: 6px;
-            margin-top: 30px;
+            margin-top: 25px;
             text-align: center;
         }
         
         .contact-box h2 {
             color: #333;
-            margin-bottom: 20px;
+            margin: 0 0 15px 0;
+            font-size: 1.4em;
+            font-weight: 600;
             border: none;
             padding: 0;
-            font-family: 'Titillium Web', sans-serif;
         }
         
         .contact-box p {
             color: #333;
-            margin-bottom: 10px;
-            font-family: 'Titillium Web', sans-serif;
+            margin: 0 0 8px 0;
+            font-size: 1em;
         }
         
         .contact-box a {
@@ -487,52 +519,41 @@
             text-decoration: underline;
         }
         
+        /* Footer */
         .footer {
             text-align: center;
-            margin-top: 30px;
-            padding-top: 25px;
+            margin-top: 25px;
+            padding-top: 20px;
             border-top: 1px solid #f0f0f1;
             color: #999;
             font-size: 0.9em;
-            font-family: 'Titillium Web', sans-serif;
         }
         
+        .footer p {
+            margin: 5px 0;
+        }
+        
+        /* Download Button */
         .download-button {
             background: #9fa979;
             color: white;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 6px;
+            border-radius: 5px;
             font-weight: 500;
             text-decoration: none;
             display: inline-block;
-            margin-top: 20px;
+            margin-top: 15px;
             transition: background 0.3s ease;
             cursor: pointer;
-            font-family: 'Titillium Web', sans-serif;
+            font-size: 0.9em;
         }
         
         .download-button:hover {
             background: #8a9166;
         }
         
-        ul {
-            padding-left: 20px;
-            margin: 5px 0;
-        }
-        
-        li {
-            margin-bottom: 0px;
-            color: #666;
-            line-height: 1.3;
-            font-family: 'Titillium Web', sans-serif;
-        }
-        
-        li strong {
-            color: #333;
-            font-weight: 600;
-        }
-        
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
@@ -540,19 +561,20 @@
             }
             
             .header h1 {
-                font-size: 2em;
+                font-size: 1.8em;
             }
             
-            .feature-grid {
+            .feature-grid, .info-grid {
                 grid-template-columns: 1fr;
-                gap: 15px;
+                gap: 10px;
             }
             
-            .welcome, .process-section, .highlight-box {
-                padding: 25px 20px;
+            .welcome, .process-section, .highlight-box, .contact-box {
+                padding: 20px;
             }
         }
         
+        /* Print Styles */
         @media print {
             body {
                 background: white;
@@ -561,7 +583,7 @@
             .container {
                 box-shadow: none;
                 margin: 0;
-                padding: 20px;
+                padding: 15px;
             }
             
             .download-button {
