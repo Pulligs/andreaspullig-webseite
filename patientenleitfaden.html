@@ -809,7 +809,7 @@
             window.location.href = 'index.html';
         });
 
-        // PDF Download Functionality
+        // PDF Download Functionality - Komplett überarbeitet
         document.getElementById('downloadPdf').addEventListener('click', function() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
@@ -819,130 +819,235 @@
             const pageHeight = doc.internal.pageSize.getHeight();
             const margin = 20;
             const maxWidth = pageWidth - 2 * margin;
+            let yPosition = 30;
+            const lineHeight = 6;
+            const paragraphSpacing = 4;
+            const sectionSpacing = 8;
             
-            // Header
-            doc.setFontSize(20);
+            // Helper function for page breaks
+            function checkPageBreak(neededSpace = 15) {
+                if (yPosition > pageHeight - neededSpace - 20) {
+                    doc.addPage();
+                    yPosition = 30;
+                    return true;
+                }
+                return false;
+            }
+            
+            // Helper function to add text with proper wrapping
+            function addText(text, fontSize = 11, fontStyle = 'normal', spacing = paragraphSpacing) {
+                doc.setFontSize(fontSize);
+                doc.setFont('helvetica', fontStyle);
+                
+                const lines = doc.splitTextToSize(text, maxWidth);
+                
+                lines.forEach((line, index) => {
+                    checkPageBreak();
+                    doc.text(line, margin, yPosition);
+                    yPosition += lineHeight;
+                });
+                
+                yPosition += spacing;
+            }
+            
+            // PDF Header
+            doc.setFontSize(22);
             doc.setFont('helvetica', 'bold');
-            doc.text('Ihr Weg zu ganzheitlicher Gesundheit', margin, 30);
+            doc.text('Ihr Weg zu ganzheitlicher Gesundheit', margin, yPosition);
+            yPosition += 12;
             
             doc.setFontSize(14);
             doc.setFont('helvetica', 'normal');
-            doc.text('Patientenleitfaden für die ärztliche Praxis von Dr. Andreas Pullig', margin, 45);
+            doc.text('Patientenleitfaden für die ärztliche Praxis von Dr. Andreas Pullig', margin, yPosition);
+            yPosition += 20;
             
-            // Content processing
-            const content = document.querySelector('.leitfaden-content');
-            let yPosition = 65;
-            const lineHeight = 7;
+            // Welcome Section
+            addText('Herzlich willkommen in meiner Praxis', 14, 'bold', 8);
+            addText('Ich freue mich sehr, Sie auf Ihrem Weg zu mehr Gesundheit und Wohlbefinden begleiten zu dürfen. Als Ihr Arzt ist es mir wichtig, dass Sie sich von Anfang an gut aufgehoben fühlen.');
+            addText('Dieser Leitfaden ist wie ein erstes Gespräch zwischen uns – er hilft Ihnen zu verstehen, was Sie bei mir erwartet und wie Sie sich optimal auf unsere gemeinsame Zeit vorbereiten können.');
             
-            // Process all content elements with proper formatting
-            const allElements = content.querySelectorAll('p, h2, h3, h4, li, strong');
+            yPosition += sectionSpacing;
             
-            // Process each element type
-            content.childNodes.forEach(node => {
-                if (yPosition > pageHeight - 30) {
-                    doc.addPage();
-                    yPosition = 30;
-                }
-                
-                // Process element based on type
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                    const element = node;
-                    let text = element.textContent.trim();
-                    if (!text) return;
-                    
-                    // Skip hr elements
-                    if (element.tagName === 'HR') {
-                        yPosition += 5;
-                        return;
-                    }
-                    
-                    // Format different elements
-                    if (element.tagName === 'H2') {
-                        doc.setFontSize(16);
-                        doc.setFont('helvetica', 'bold');
-                        yPosition += 10;
-                    } else if (element.tagName === 'H3') {
-                        doc.setFontSize(14);
-                        doc.setFont('helvetica', 'bold');
-                        yPosition += 8;
-                    } else if (element.tagName === 'H4') {
-                        doc.setFontSize(12);
-                        doc.setFont('helvetica', 'bold');
-                        yPosition += 5;
-                    } else if (element.classList.contains('highlight-box')) {
-                        // Special handling for highlight boxes
-                        doc.setFontSize(11);
-                        doc.setFont('helvetica', 'normal');
-                        yPosition += 5;
-                        // Add a visual separator
-                        doc.setDrawColor(40, 66, 97);
-                        doc.line(margin, yPosition - 3, margin + maxWidth, yPosition - 3);
-                        yPosition += 3;
-                    } else if (element.classList.contains('contact-box')) {
-                        // Special handling for contact boxes
-                        doc.setFontSize(11);
-                        doc.setFont('helvetica', 'normal');
-                        yPosition += 5;
-                    } else {
-                        doc.setFontSize(11);
-                        doc.setFont('helvetica', 'normal');
-                    }
-                    
-                    // Process text with bold formatting
-                    if (element.querySelector('strong')) {
-                        // Handle mixed bold/normal text
-                        const parts = [];
-                        let currentPart = '';
-                        let isBold = false;
-                        
-                        // Simple bold text extraction
-                        const boldElements = element.querySelectorAll('strong');
-                        boldElements.forEach(boldEl => {
-                            const boldText = boldEl.textContent;
-                            text = text.replace(boldText, `||BOLD||${boldText}||ENDBOLD||`);
-                        });
-                        
-                        // Split and format text
-                        const textParts = text.split('||');
-                        textParts.forEach(part => {
-                            if (part === 'BOLD') {
-                                isBold = true;
-                            } else if (part === 'ENDBOLD') {
-                                isBold = false;
-                            } else if (part.trim()) {
-                                const lines = doc.splitTextToSize(part, maxWidth);
-                                lines.forEach(line => {
-                                    if (yPosition > pageHeight - 30) {
-                                        doc.addPage();
-                                        yPosition = 30;
-                                    }
-                                    doc.setFont('helvetica', isBold ? 'bold' : 'normal');
-                                    doc.text(line, margin, yPosition);
-                                    yPosition += lineHeight;
-                                });
-                            }
-                        });
-                    } else {
-                        // Regular text without bold
-                        const lines = doc.splitTextToSize(text, maxWidth);
-                        lines.forEach(line => {
-                            if (yPosition > pageHeight - 30) {
-                                doc.addPage();
-                                yPosition = 30;
-                            }
-                            doc.text(line, margin, yPosition);
-                            yPosition += lineHeight;
-                        });
-                    }
-                    
-                    yPosition += 3; // Extra space after each element
-                }
-            });
+            // Main Sections
+            addText('Was macht meine ärztliche Praxis besonders?', 16, 'bold', 8);
+            addText('Ganzheitliche Medizin: Als Facharzt für Allgemeinmedizin und Urologie mit anthroposophischer Zusatzausbildung sehe ich Sie als ganzen Menschen – nicht nur Ihre Symptome. Körper, Geist, Seele und Lebenssituation gehören für mich zusammen.');
+            addText('Zeit für Sie: In einer Welt der 5-Minuten-Medizin nehme ich mir bewusst die Zeit, die eine sorgfältige Behandlung braucht. Ersttermine dauern 60-90 Minuten, da es mir wichtig ist, alle Aspekte Ihrer Situation zu beleuchten. Folgetermine dauern in der Regel 30-60 Minuten, je nach Anliegen.');
+            addText('Wissenschaft mit Herz: Moderne Medizin und die Weisheit einer ganzheitlichen Heilkunde ergänzen sich in meiner Praxis zu einem Behandlungsansatz, der sowohl Ihren Körper als auch Ihre individuelle Geschichte respektiert.');
             
-            // Footer on last page
+            yPosition += sectionSpacing;
+            
+            addText('Ihr Ersttermin – medizinische Erstberatung', 16, 'bold', 8);
+            
+            addText('Vor dem Termin', 14, 'bold', 6);
+            addText('• Medizinische Anamnese: Sie erhalten vorab einen ausführlichen Fragebogen. Nehmen Sie sich gerne die Zeit, ihn sorgfältig auszufüllen – je genauer Sie mir Ihre Geschichte erzählen, desto besser kann ich Sie verstehen und behandeln.');
+            addText('• Medikamentenliste: Erstellen Sie eine Liste aller Medikamente und Nahrungsergänzungsmittel (diese können Sie auch bequem im Fragebogen eintragen). Auch das, was Sie nur gelegentlich nehmen, interessiert mich.');
+            addText('• Ihre medizinische Geschichte: Bringen Sie alle relevanten Unterlagen mit (Laborwerte, Röntgenbilder, Arztbriefe der letzten 2 Jahre). Keine Sorge, falls etwas fehlt – wir finden gemeinsam heraus, was wir brauchen.');
+            addText('• Versicherungsnachweis: Als Privatpraxis rechne ich direkt mit Ihnen ab – bringen Sie gerne Ihre Versicherungsunterlagen mit.');
+            
+            addText('Während unseres Gesprächs', 14, 'bold', 6);
+            addText('• Ihre Geschichte: Wir besprechen ausführlich, was Sie zu mir führt – nicht nur die aktuellen Beschwerden, sondern auch, was Ihnen wichtig ist und wo Sie hinmöchten.');
+            addText('• Körperliche Untersuchung: Je nach Ihrem Anliegen führe ich eine gründliche Untersuchung durch. Sie erfahren dabei immer, was ich tue und warum.');
+            addText('• Gemeinsames Verstehen: Wir entwickeln zusammen ein Bild davon, was in Ihrem Körper geschieht und welche Wege der Heilung sich anbieten.');
+            addText('• Ihr Behandlungsplan: Nichts geschieht über Ihren Kopf hinweg. Wir besprechen gemeinsam, welche Schritte für Sie Sinn machen.');
+            
+            addText('Nach unserem Termin', 14, 'bold', 6);
+            addText('• Ihre Zusammenfassung: Sie erhalten eine verständliche Übersicht unseres Gesprächs – sowohl für Sie als auch für andere Ärzte, falls gewünscht.');
+            addText('• Konkrete Schritte: Klare, umsetzbare Empfehlungen, die zu Ihrem Leben passen.');
+            addText('• Der weitere Weg: Wir planen gemeinsam, wie es weitergeht – ob weitere Untersuchungen nötig sind oder wann wir uns wiedersehen.');
+            
+            yPosition += sectionSpacing;
+            
+            addText('Meine ärztliche Behandlungsphilosophie', 16, 'bold', 8);
+            addText('Das Beste aus zwei Welten', 14, 'bold', 4);
+            addText('Ich verbinde moderne Schulmedizin mit ganzheitlicher Heilkunde zu einem Ansatz, der wissenschaftlich fundiert ist und gleichzeitig den Menschen in seiner Ganzheit sieht.');
+            
+            addText('Sie sind der Experte für sich selbst', 14, 'bold', 4);
+            addText('Als Ihr Arzt bringe ich medizinisches Wissen und Erfahrung mit. Sie aber kennen Ihren Körper am besten. Gemeinsam finden wir heraus, was Ihnen guttut und was Sie brauchen.');
+            
+            addText('Heilung braucht Zeit', 14, 'bold', 4);
+            addText('Echte Gesundheit entsteht fast nie über Nacht. Wir schauen nicht nur auf das, was gerade schmerzt, sondern auch darauf, was Ihrem Körper hilft, wieder ins Gleichgewicht zu finden.');
+            
+            yPosition += sectionSpacing;
+            
+            addText('Medizinische Diagnostik', 16, 'bold', 8);
+            addText('Labordiagnostik', 14, 'bold', 4);
+            addText('• Basis-Diagnostik: Großes Blutbild, Stoffwechsel- und Entzündungsparameter');
+            addText('• Präventivmedizin: Nährstoffstatus, Hormonspiegel, Longevity-Marker');
+            addText('• Spezielle Diagnostik: Je nach medizinischer Fragestellung');
+            
+            addText('Funktionelle Untersuchungen', 14, 'bold', 4);
+            addText('• Herzratenvariabilität: Medizinische Messung Ihrer Stress-Regulation');
+            addText('• Biomarker-Analyse: Wissenschaftlich fundierte Gesundheitsparameter');
+            addText('• Ganzheitliche Diagnostik: Körperliche und psychosomatische Zusammenhänge');
+            
+            addText('Bildgebende Verfahren', 14, 'bold', 4);
+            addText('• Sonographieuntersuchung in der Praxis');
+            addText('• Vermittlung zu spezialisierten Kollegen bei Bedarf');
+            addText('• Befundbesprechung und Einordnung in den Gesamtkontext');
+            
+            yPosition += sectionSpacing;
+            
+            addText('Medizinische Behandlungsmöglichkeiten', 16, 'bold', 8);
+            addText('Ganzheitliche Medizin', 14, 'bold', 4);
+            addText('• Phytotherapie: Pflanzenheilkunde nach wissenschaftlichen Standards');
+            addText('• Homöopathie: Individuell angepasste homöopathische Therapie');
+            addText('• Konstitutionsbehandlung: Stärkung der körpereigenen Regulationskräfte');
+            
+            addText('Moderne Präventivmedizin', 14, 'bold', 4);
+            addText('• Orthomolekulare Therapie: Gezielte Nährstofftherapie basierend auf Laborwerten');
+            addText('• Hormonregulation: Natürliche Behandlung hormoneller Dysbalancen');
+            addText('• Anti-Aging-Medizin: Wissenschaftlich fundierte Longevity-Ansätze');
+            
+            addText('Psychosomatische Medizin', 14, 'bold', 4);
+            addText('• Stress-Medizin: Medizinische Behandlung stressbedingter Erkrankungen');
+            addText('• Burnout-Therapie: Ganzheitliche medizinische Behandlung bei Erschöpfung');
+            addText('• Lebensstil-Medizin: Medizinisch begleitete Lebensstil-Optimierung');
+            
+            yPosition += sectionSpacing;
+            
+            addText('Kosten und Abrechnung', 16, 'bold', 8);
+            addText('Mein Fokus liegt auf einer ausführlichen Anamnese und einer sorgfältig abgestimmten funktionellen Labordiagnostik. Für jede Patientin und jeden Patienten entwickle ich eine spezifische Diagnostik und erstelle im persönlichen Gespräch einen Therapieplan, der auf die jeweiligen Bedürfnisse, den Verlauf der Beschwerden und die individuellen Möglichkeiten abgestimmt ist.');
+            
+            addText('Abrechnungsmodalitäten', 14, 'bold', 6);
+            addText('Meine privatärztlichen Leistungen werden nach den Vorgaben der Gebührenordnung für Ärzte (GOÄ) direkt mit Ihnen abgerechnet.');
+            addText('Für Privatversicherte: Sie können die Rechnung zur Erstattung bei ihrer Krankenversicherung einreichen. Die Kostenübernahme hängt von Ihrer individuellen Vertragsgestaltung ab und kann nicht garantiert werden.');
+            addText('Für gesetzlich Versicherte: Die gesetzlichen Krankenkassen übernehmen diese Kosten nicht. Sie können meine Leistungen jedoch gerne als Selbstzahler in Anspruch nehmen.');
+            
+            addText('Behandlungskosten', 14, 'bold', 6);
+            addText('Die Behandlungskosten richten sich nach dem Umfang der Therapie sowie möglichen Labor- und Medikamentenkosten. Der Preis für eine ärztliche Beratungsstunde beläuft sich auf rund 250 € (bestehende Patienten können selbstverständlich auch weiterhin für alltägliche Beschwerden wie einen Schnupfen oder andere kleinere Anliegen kommen – diese benötigen dann nicht die volle Stunde und werden entsprechend günstiger abgerechnet). Vor Beginn der Behandlung erhalten Sie einen Vertrag und eine Honorarvereinbarung mit allen Abrechnungsdetails.');
+            
+            addText('Steuerliche Absetzbarkeit', 14, 'bold', 6);
+            addText('Gesundheitskosten können Sie in der Steuererklärung als außergewöhnliche Belastungen geltend machen. Wenden Sie sich hierzu gerne an Ihren Steuerberater oder eine andere Beratungsstelle.');
+            
+            yPosition += sectionSpacing;
+            
+            addText('Praktische Informationen', 16, 'bold', 8);
+            addText('Terminvereinbarung', 14, 'bold', 4);
+            addText('• Ersttermine: Planen Sie bitte 2-3 Wochen Vorlauf ein');
+            addText('• Folgetermine: Je nach Anliegen flexibel planbar');
+            addText('• Notfälle: Akute medizinische Probleme werden zeitnah behandelt');
+            addText('• Absagen: Mindestens 24 Stunden vorher');
+            
+            addText('Sprechzeiten und Kontakt', 14, 'bold', 6);
+            addText('Ab 01.10.2025:');
+            addText('Adresse: Holzbacher Str. 3, 55469 Simmern');
+            addText('Termine per E-Mail: termine@andreaspullig.com');
+            addText('Telefonische Terminvergabe: 06761-9299276 (Mo-Do von 08-12 Uhr)');
+            
+            yPosition += sectionSpacing;
+            
+            addText('Zusammenarbeit mit anderen Ärzten', 16, 'bold', 8);
+            addText('• Hausarzt-Funktion: Gerne auch als Ihr Hausarzt');
+            addText('• Fachärztliche Zusammenarbeit: Enge Kooperation mit Kollegen verschiedener Fachrichtungen');
+            addText('• Zweitmeinung: Kompetente Einschätzung bei komplexen medizinischen Fragestellungen');
+            
+            yPosition += sectionSpacing;
+            
+            addText('Zwischen den Terminen', 16, 'bold', 8);
+            addText('Bei medizinischen Fragen', 14, 'bold', 4);
+            addText('• Dringende Fragen: Telefonische Erreichbarkeit über die Praxis');
+            addText('• Kurze Nachfragen: E-Mail für unkomplizierte medizinische Rückfragen');
+            addText('• Notfälle: Ärztlicher Bereitschaftsdienst (116 117) oder Notaufnahme');
+            
+            addText('Ihre Mitarbeit', 14, 'bold', 4);
+            addText('• Therapietreue: Konsequente Umsetzung der medizinischen Empfehlungen');
+            addText('• Beobachtung: Dokumentation von Symptomen und Therapieverläufen');
+            addText('• Offenheit: Ehrliche Kommunikation über Beschwerden und Befinden');
+            
+            yPosition += sectionSpacing;
+            
+            addText('Häufige medizinische Fragen', 16, 'bold', 8);
+            addText('Wie oft sollte ich zu Ihnen kommen?', 12, 'bold', 4);
+            addText('Das besprechen wir ganz individuell – bei akuten Beschwerden sehen wir uns häufiger, bei chronischen Themen oft alle 4-8 Wochen. Für die Gesundheitsvorsorge reichen meist 1-2 Termine im Jahr.');
+            
+            addText('Vertragen sich Ihre Naturheilmittel mit meinen anderen Medikamenten?', 12, 'bold', 4);
+            addText('Als Arzt achte ich sorgfältig darauf, dass sich alle Ihre Medikamente gut ergänzen. Alternativmedizinische Arzneimittel sind in der Regel sehr gut verträglich.');
+            
+            addText('Was passiert mit meinen persönlichen Informationen?', 12, 'bold', 4);
+            addText('Alles, was Sie mir anvertrauen, bleibt selbstverständlich unter uns. Die ärztliche Schweigepflicht ist für mich heilig, und Ihre Daten werden nach strengsten Standards geschützt.');
+            
+            addText('Können Sie auch mein Hausarzt werden?', 12, 'bold', 4);
+            addText('Gerne! Viele meiner Patienten schätzen es, einen Hausarzt zu haben, der Zeit hat und ganzheitlich denkt. Bei Bedarf arbeite ich eng mit Fachkollegen zusammen.');
+            
+            yPosition += sectionSpacing;
+            
+            addText('Mein ärztliches Versprechen', 16, 'bold', 8);
+            addText('• Ärztliche Sorgfalt: Höchste medizinische Standards, aber mit der Zeit und Aufmerksamkeit, die Sie verdienen');
+            addText('• Der ganze Mensch: Für mich sind Sie mehr als Ihre Diagnose – ich sehe Sie als einzigartigen Menschen');
+            addText('• Wissenschaft und Intuition: Moderne Medizin ergänzt durch jahrzehntelange Erfahrung');
+            addText('• Respekt: Ihre Entscheidungen und Ihr Tempo stehen im Mittelpunkt');
+            addText('• Vertrauen: Was zwischen uns besprochen wird, bleibt zwischen uns');
+            addText('• Weiterbildung: Ich lerne kontinuierlich dazu, um Ihnen die beste Behandlung bieten zu können');
+            
+            yPosition += sectionSpacing;
+            
+            addText('Notfall-Informationen', 16, 'bold', 8);
+            addText('Bei akuten medizinischen Problemen außerhalb der Sprechzeiten:');
+            addText('• Ärztlicher Bereitschaftsdienst: 116 117');
+            addText('• Notaufnahme des nächsten Krankenhauses');
+            addText('• Bei lebensbedrohlichen Situationen: 112');
+            
+            yPosition += sectionSpacing;
+            
+            addText('Kontakt zur Praxis', 16, 'bold', 8);
+            addText('Dr. Andreas Pullig', 12, 'bold', 2);
+            addText('Facharzt für Allgemeinmedizin und Urologie');
+            addText('Anthroposophische Medizin');
+            addText('E-Mail: termine@andreaspullig.com');
+            addText('Telefon: 06761-9299276 (Mo-Do von 08-12 Uhr)');
+            addText('Homepage: www.andreaspullig.com');
+            addText('Sprechzeiten: Nach Vereinbarung');
+            
+            // Footer
+            checkPageBreak(20);
+            yPosition += 10;
             doc.setFontSize(10);
             doc.setFont('helvetica', 'italic');
-            doc.text('© 2025 Dr. Andreas Pullig - Alle Rechte vorbehalten', margin, pageHeight - 15);
+            doc.text('Dieser Leitfaden gibt Ihnen einen Überblick über die medizinische Behandlung in meiner Praxis.', margin, yPosition);
+            yPosition += 6;
+            doc.text('Alle Details besprechen wir gerne persönlich in unserem ärztlichen Gespräch.', margin, yPosition);
+            yPosition += 10;
+            doc.text('© 2025 Dr. Andreas Pullig - Alle Rechte vorbehalten', margin, yPosition);
             
             // Download
             doc.save('Patientenleitfaden-Dr-Andreas-Pullig.pdf');
