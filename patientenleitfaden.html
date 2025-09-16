@@ -776,8 +776,9 @@
                     <p><strong>Dr. Andreas Pullig</strong><br>
                     Facharzt für Allgemeinmedizin und Urologie<br>
                     Anthroposophische Medizin</p>
-                    <p><strong>E-Mail:</strong> <a href="mailto:mail@andreaspullig.com">mail@andreaspullig.com</a><br>
-                    <strong>Homepage:</strong> <a href="https://andreaspullig.com">andreaspullig.com</a><br>
+                    <p><strong>E-Mail:</strong> <a href="mailto:termine@andreaspullig.com">termine@andreaspullig.com</a><br>
+                    <strong>Telefon:</strong> <a href="tel:+4967619299276">06761-9299276</a> (Mo-Do von 08-12 Uhr)<br>
+                    <strong>Homepage:</strong> <a href="https://www.andreaspullig.com">www.andreaspullig.com</a><br>
                     <strong>Sprechzeiten:</strong> Nach Vereinbarung</p>
                 </div>
 
@@ -828,50 +829,114 @@
             doc.setFont('helvetica', 'normal');
             doc.text('Patientenleitfaden für die ärztliche Praxis von Dr. Andreas Pullig', margin, 45);
             
-            // Content - Simple text extraction
+            // Content processing
             const content = document.querySelector('.leitfaden-content');
             let yPosition = 65;
             const lineHeight = 7;
             
-            // Extract and format text content
-            const paragraphs = content.querySelectorAll('p, h2, h3, li');
+            // Process all content elements with proper formatting
+            const allElements = content.querySelectorAll('p, h2, h3, h4, li, strong');
             
-            paragraphs.forEach(element => {
+            // Process each element type
+            content.childNodes.forEach(node => {
                 if (yPosition > pageHeight - 30) {
                     doc.addPage();
                     yPosition = 30;
                 }
                 
-                let text = element.textContent.trim();
-                if (!text) return;
-                
-                // Format different elements
-                if (element.tagName === 'H2') {
-                    doc.setFontSize(16);
-                    doc.setFont('helvetica', 'bold');
-                    yPosition += 10;
-                } else if (element.tagName === 'H3') {
-                    doc.setFontSize(14);
-                    doc.setFont('helvetica', 'bold');
-                    yPosition += 5;
-                } else {
-                    doc.setFontSize(11);
-                    doc.setFont('helvetica', 'normal');
-                }
-                
-                // Split text to fit page width
-                const lines = doc.splitTextToSize(text, maxWidth);
-                
-                lines.forEach(line => {
-                    if (yPosition > pageHeight - 30) {
-                        doc.addPage();
-                        yPosition = 30;
+                // Process element based on type
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    const element = node;
+                    let text = element.textContent.trim();
+                    if (!text) return;
+                    
+                    // Skip hr elements
+                    if (element.tagName === 'HR') {
+                        yPosition += 5;
+                        return;
                     }
-                    doc.text(line, margin, yPosition);
-                    yPosition += lineHeight;
-                });
-                
-                yPosition += 3; // Extra space after each element
+                    
+                    // Format different elements
+                    if (element.tagName === 'H2') {
+                        doc.setFontSize(16);
+                        doc.setFont('helvetica', 'bold');
+                        yPosition += 10;
+                    } else if (element.tagName === 'H3') {
+                        doc.setFontSize(14);
+                        doc.setFont('helvetica', 'bold');
+                        yPosition += 8;
+                    } else if (element.tagName === 'H4') {
+                        doc.setFontSize(12);
+                        doc.setFont('helvetica', 'bold');
+                        yPosition += 5;
+                    } else if (element.classList.contains('highlight-box')) {
+                        // Special handling for highlight boxes
+                        doc.setFontSize(11);
+                        doc.setFont('helvetica', 'normal');
+                        yPosition += 5;
+                        // Add a visual separator
+                        doc.setDrawColor(40, 66, 97);
+                        doc.line(margin, yPosition - 3, margin + maxWidth, yPosition - 3);
+                        yPosition += 3;
+                    } else if (element.classList.contains('contact-box')) {
+                        // Special handling for contact boxes
+                        doc.setFontSize(11);
+                        doc.setFont('helvetica', 'normal');
+                        yPosition += 5;
+                    } else {
+                        doc.setFontSize(11);
+                        doc.setFont('helvetica', 'normal');
+                    }
+                    
+                    // Process text with bold formatting
+                    if (element.querySelector('strong')) {
+                        // Handle mixed bold/normal text
+                        const parts = [];
+                        let currentPart = '';
+                        let isBold = false;
+                        
+                        // Simple bold text extraction
+                        const boldElements = element.querySelectorAll('strong');
+                        boldElements.forEach(boldEl => {
+                            const boldText = boldEl.textContent;
+                            text = text.replace(boldText, `||BOLD||${boldText}||ENDBOLD||`);
+                        });
+                        
+                        // Split and format text
+                        const textParts = text.split('||');
+                        textParts.forEach(part => {
+                            if (part === 'BOLD') {
+                                isBold = true;
+                            } else if (part === 'ENDBOLD') {
+                                isBold = false;
+                            } else if (part.trim()) {
+                                const lines = doc.splitTextToSize(part, maxWidth);
+                                lines.forEach(line => {
+                                    if (yPosition > pageHeight - 30) {
+                                        doc.addPage();
+                                        yPosition = 30;
+                                    }
+                                    doc.setFont('helvetica', isBold ? 'bold' : 'normal');
+                                    doc.text(line, margin, yPosition);
+                                    yPosition += lineHeight;
+                                });
+                            }
+                        });
+                    } else {
+                        // Regular text without bold
+                        const lines = doc.splitTextToSize(text, maxWidth);
+                        lines.forEach(line => {
+                            if (yPosition > pageHeight - 30) {
+                                doc.addPage();
+                                yPosition = 30;
+                            }
+                            doc.text(line, margin, yPosition);
+                            yPosition += lineHeight;
+                        });
+                    }
+                    
+                    yPosition += 3; // Extra space after each element
+                }
             });
             
             // Footer on last page
