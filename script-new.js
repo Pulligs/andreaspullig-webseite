@@ -918,7 +918,7 @@ case 0:
             
             <p><strong>Dr. Carmen Pullig</strong><br>
             <em>Fachärztin für Allgemeinmedizin<br>
-            Mutter von 5 Kindern, spezialisiert auf Ernährung, Darmgesundheit und Familiengesundheit</em></p>
+            Mutter von 5 Kindern, Schwerpunkte: Ernährung, Darmgesundheit und Familiengesundheit</em></p>
 
             <div class="references-section">
                 <h3>Literaturverzeichnis</h3>
