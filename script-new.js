@@ -683,6 +683,7 @@ case 0:
                 <li>Ferritin (Eisenspeicher – optimal: 70–100 ng/mL)</li>
                 <li>Transferrin-Sättigung (Eisentransport – optimal: 20–45%)</li>
                 <li>Kleines Blutbild (Hämoglobin, MCV)</li>
+                <li>CRP (Entzündungswert – Entzündung kann einen normalen Ferritinwert vorgaukeln, obwohl ein Mangel vorliegt)</li>
             </ul>
             
             <p><strong>Wie läuft das ab?</strong></p>
