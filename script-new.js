@@ -509,7 +509,7 @@ setupFormspreeHandler('kontakt-form-vortraege', 'kontakt-success-vortraege', 'ko
                 
                 <hr>
                 
-                <p><em>Dieser Artikel basiert auf aktueller wissenschaftlicher Forschung. Die Supplementierungs-Empfehlungen sind Orientierungswerte und ersetzen keine individuelle ärztliche Beratung.</em></p>
+                <p><em>Die Supplementierungs-Empfehlungen sind Orientierungswerte und ersetzen keine individuelle ärztliche Beratung.</em></p>
                 
                 <hr>
                 
