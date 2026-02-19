@@ -456,8 +456,7 @@ case 0:
 
                 <p><strong>Entscheiden Sie, wer Sie sein wollen.</strong></p>
 
-                <p><em>In den kommenden Wochen werden wir tiefer in die Frage eintauchen, wie Sie Ihre innere Kohärenz aktiv stärken können – auch und gerade in turbulenten Zeiten. Denn wahre Gesundheit beginnt nicht beim Supplement. Sie beginnt bei der Frage, ob Sie in Ihrer Kraft sind.</em></p>
-
+                
                 <hr>
 
                 <h4>Quellenverzeichnis</h4>
