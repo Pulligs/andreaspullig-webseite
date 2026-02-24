@@ -494,7 +494,7 @@ case 0:
                 <p>Wenn Sie nicht länger auf eigene Faust rätseln möchten, sondern wissen wollen, wo Sie wirklich stehen – melden Sie sich gerne in unserer Praxis. Wir nehmen uns die Zeit, die es braucht: für die richtige Diagnostik, für das Gespräch und für einen Plan, der zu Ihnen passt.</p>
                 
                 <p><strong>Praxis Dr. med. Andreas Pullig & Dr. med. Carmen Pullig</strong> · Simmern<br>
-                Telefon: [Telefonnummer] · [Link zur Online-Terminbuchung]</p>
+                </p>
                 
                 <p><em>Dr. Andreas Pullig ist Facharzt für Allgemeinmedizin und Urologie mit Schwerpunkt funktionelle und ganzheitliche Medizin. Er praktiziert in Simmern und verbindet schulmedizinische Diagnostik mit ursachenbezogener Medizin.</em></p>
                 
